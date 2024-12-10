@@ -1,0 +1,99 @@
+\documentclass[12pt, a4paper]{report}
+
+\usepackage[margin=1in]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\usepackage{times}
+
+\usepackage{float}
+
+\usepackage{url}
+\usepackage{xurl} % Avoids URLs to overfull \hbox
+
+\usepackage{graphicx}
+\graphicspath{{img/}} % global configuration
+\usepackage[colorlinks=false, pdfborder={0 0 0}]{hyperref}
+
+\usepackage{tabularray}
+
+\usepackage{listings}
+\usepackage[table, svgnames]{xcolor}
+
+\title{
+  Data Compression
+}
+\author{
+  Enrico Marchionni\\
+  \texttt{enrico.marchionni@studio.unibo.it}
+}
+\date{\today}
+
+% Package to keep track of the total number of pages
+\usepackage{lastpage}
+\usepackage{fancyhdr}
+
+\fancypagestyle{fancy}{
+  \fancyhf{}
+  \fancyfoot[C]{\thepage\ of \pageref{LastPage}}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0.4pt}
+}
+
+\fancypagestyle{plain}{
+  \fancyhf{}
+  \fancyfoot[C]{\thepage\ of \pageref{LastPage}}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0.4pt}
+}
+
+\pagestyle{fancy}
+
+\usepackage[backend=biber, style=alphabetic, sorting=ydnt]{biblatex}
+\addbibresource{references.bib}
+
+\usepackage{amsthm} % to make definitions
+\newtheorem{definition}{Definition}[section] % custom environment for definitions
+\newtheorem{example}{Example}
+
+% for graphs and overlaying text
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{amsmath} % For math symbols
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+
+Data compression is intended as the practice of reducing the size of binary digital data.
+It could be considered as a procedure that takes a bit-stream in input and returns another bit-stream as output.
+The output stream may be of equal length or shorter than the input.
+
+The key to understand data compression is to discuss the distinction between data and information.
+It can be said that data is how information is represented\footnote{ex. the number 0 can be expressed in binary as a sequence of a
+certain number of zeros, from \(1\) to \(\infty\), and we know that calculators use at least 8 bits, let's say \(n\)
+(considering it as a multiple of 8), to represent an integer number. So at the end \(n - 1\) bits are redundant in the 0
+representation on a calculator.}. In simple terms, data can be compressed because its original representation is not the shortest
+possible. The goal of data compression is to reduce data by maintaining the same information.
+
+The counterpart is that in our time data is intrinsically redundant. And this redundancy is needed.
+So data compression isn't only a procedure that goes from a bit-stream to another one not longer, but it requires also another
+procedure that regenerates the original bit-stream of data, necessary for practical use, from the previously given output
+bit-stream of information.
+
+\dots % difference between information and meaning???
+
+\end{abstract}
+
+\tableofcontents
+
+\dots
+
+% \appendix
+
+% \printbibliography
+
+\end{document}
