@@ -173,6 +173,120 @@ information. In fact a sequence of heads (coded as \(1\)) and tails (coded as \(
 these are the \(n\) bits of information.
 \end{example}
 
+\chapter{Entropy}
+
+% DEFINITION
+% \begin{definition}
+% \textbf{Entropy}\footnote{\url{https://dictionary.cambridge.org/dictionary/english/entropy}} is the amount of order or lack of
+% order in a system.
+% \end{definition}
+
+Entropy is a concept that was explained in many fields. Previously defined by Clausius\footnote{Rudolf Julius Emanuel Clausius
+(1822–1888) was a German physicist and mathematician and is considered one of the central founding fathers of the science of
+thermodynamics.} and Boltzmann\footnote{Ludwig Eduard Boltzmann (1844–1906) was an Austrian physicist and philosopher. His
+greatest achievements were the development of statistical mechanics and the statistical explanation of the second law of
+thermodynamics.} was later used by Shannon. It is believed that these three definitions are indeed equivalent although no formal
+proof of this is available (as discussed in \cite{EntropyAndInformationTheoryUsesAndMisuses}).
+
+\section{Quantifying Entropy}
+
+Here is how Shannon introduced the measure of Information:
+\begin{quote}
+Suppose we have a set of possible events whose probabilities of occurrence are \(p_1, p_2, \dots, p_n\). These probabilities are
+known but that is all we know concerning which event will occur. Can we find a measure of how much "choice" is involved in the
+selection of the event or how uncertain we are of the outcome?
+\end{quote}
+If there is such a measure, say, \(H(p_1, p_2, \dots, p_n)\)\footnote{Where \(H\) refers to Hartley.}, it is reasonable to require
+of it the following properties:
+\begin{itemize}
+  \item \(H\) should be continuous in the \(p_i\).
+  \item If all the \(p_i\) are equal, \(p_i = \frac{1}{n}\) then \(H\) should be a monotonic increasing function of \(n\). With
+  equally likely events there is more choice, or uncertainty, when there are more possible events.
+  \item If a choice be broken down into two successive choices, the original \(H\) should be the weighted sum of the individual
+  values of \(H\).
+\end{itemize}
+
+Then Shannon proved that the only \(H\) satisfying the three assumptions above has the form:
+
+\begin{equation} \label{eq:entropy1}
+  H = -K \sum_{i = 1}^{n} p_i \ln p_i
+\end{equation}
+
+\autoref{eq:entropy1} includes a constant \(K\), in the Shannon article it is any constant. In application to thermodynamics \(K\)
+turns into Boltzmann Constant. It is simply a scaling factor. Note that if \(K\) is \(\frac{1}{\ln b}\) or equivalently
+\(\log_b e\), the formula, considering only \(K\) and the logarithm, becomes \(\log_b e \cdot \ln p\) that is the same of
+\(\log_b e^{\ln p}\) that can be simply written as \(\log_b p\).
+
+So \(H\) can be simply reformulated as:
+
+\begin{equation} \label{eq:entropy2}
+  H(P) = - \sum_{i = 1}^{n} p_i \log_2 p_i
+\end{equation}
+
+Where \(P = {p_1, p_2, \dots, p_n}\) is the distribution of probability considered.
+remind that in \autoref{eq:entropy2} base \(2\) could be a general base \(b\) and it can be simply view as a simple change in the
+unit of measurement (as it was seen in \autoref{tab:information_units}).
+
+An intuitive way to explain the origin of this formula is now discussed. We want to obtain the average amount of information from
+each symbol we see in a stream. Let's suppose we start from \(n\) symbols \(a_1, a_1, \dots, a_n\).
+A stream of these symbols is provided with probabilities \(p_1, p_1, \dots, p_n\) respectively.
+As it was seen in \autoref{eq:information2} for a symbol \(a_i\) we get \(-\log_2 p_i\) information.
+In a long run, say \(N\) observations, we will see (approximately) \(N \cdot p_i\) occurrences of the symbol \(a_i\).
+Thus in the \(N\) independent observations, we will get total information of:
+
+\begin{equation} \label{eq:information_entropy1}
+  I = - \sum_{i = 1}^n (N \cdot p_i) \log_2 p_i
+\end{equation}
+
+So then, from \autoref{eq:information_entropy1} the average information is:
+
+\begin{equation} \label{eq:information_entropy2}
+  \frac{I}{N} = - \frac{1}{N} \sum_{i = 1}^n (N \cdot p_i) \log_2 p_i = - \sum_{i = 1}^n p_i \log_2 p_i
+\end{equation}
+
+At this point we get \autoref{eq:information_entropy2} that is the same as \autoref{eq:entropy2}.
+Furthermore, it is shown in \autoref{eq:entropy_bounds} that \(H(P)\) is bounded (for further information see
+\cite{AnIntroductionToInformationTheoryAndEntropy}):
+
+\begin{equation} \label{eq:entropy_bounds}
+  0 \leq H(P) \leq \log_2 n
+\end{equation}
+
+\begin{example}
+Returning to the example of the coin, in \autoref{fig:entropy_graph} it is shown an example of the entropy in function of the
+probability of heads or tails when flipping a fair coin.
+
+\begin{figure}[H]
+  \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+            width=10cm,
+            height=6cm,
+            xlabel={Probability \( p \)},
+            ylabel={Entropy \( H(p) \)},
+            ymin=0, ymax=1.1,
+            xmin=0, xmax=1,
+            ytick={0, 0.5, 1},
+            xtick={0, 0.5, 1},
+            domain=0:1,
+            samples=200,
+            grid=both,
+            major grid style={line width=0.6pt, draw=gray!50},
+            minor grid style={line width=0.3pt, draw=gray!30},
+            tick label style={font=\small},
+            axis lines=left
+        ]
+            \addplot[
+                thick,
+                blue,
+            ]
+            {-x*log2(x) - (1-x)*log2(1-x)} node[pos=0.5, above, sloped, xshift=-0.5cm, yshift=0.3cm] {};
+        \end{axis}
+    \end{tikzpicture}
+    \caption{\label{fig:entropy_graph} Graph of entropy \( H(p) = -p \log_2(p) - (1-p) \log_2(1-p) \) for a fair coin toss.}
+\end{figure}
+\end{example}
+
 \appendix
 
 \printbibliography
