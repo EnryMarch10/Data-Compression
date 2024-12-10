@@ -355,6 +355,53 @@ Random numbers can be divided into two categories: true random numbers and pseud
 True random number generators (RNGs) are composed of two parts: entropy source and algorithm post-processing.
 Pseudo random number generators (PRNGs) take a seed as input and generate an output sequence by function.
 
+\chapter{Data Compression}
+
+\section{Techniques}
+
+The compression techniques can be divided in two main types "lossless" and "lossy".
+The first category is the most similar to the theory and the most practical intuition of it.
+Lossless compression ratios are generally in the range of 2:1 to 8:1. Lossy compression, in contrast, works on the assumption that
+the data doesn't have to be stored perfectly. Most information can be simply thrown away; the data will still be of acceptable
+quality. This technique is frequently used in image and video compression, where a group of pixels can be approssimated into a
+single value. In this case the ratio can be of orders greater. In conclusion losseless compression has a lower ratio it preserves
+all information that can be reload back to the original data, on the other hand, lossy compression has a bigger ratio but it
+discards some information and doesn't generate the same data when it is reloaded.
+
+\section{Comparison of Algorithms}
+
+They are useful when done on algorithms of the same compression technique: lossless or lossy.
+Measurements have to be considered as averages in practice, because they are different for every single sample so their value is
+an approximation.
+
+\subsection{Compression Ratio}
+
+An important factor when considering data compression is the "compression ratio". It is simply the sample size reduction factor.
+
+\begin{equation} \label{eq:entropy_bounds}
+  compression ratio = \frac{uncompressed file size}{compressed file size}
+\end{equation}
+
+\subsection{Compression Speed}
+
+It is important is specific use cases, usually when the network is involved.
+
+\begin{equation} \label{eq:entropy_bounds}
+  compression speed (MB / s) = \frac{uncompressed file size (MB)}{compression time (s)}
+\end{equation}
+
+\subsection{Decompression Speed}
+
+As the compression speed, it is important is specific use cases, usually when the network is involved.
+
+\begin{equation} \label{eq:entropy_bounds}
+  decompression speed (MB / s) = \frac{uncompressed file size (MB)}{uncompression time (s)}
+\end{equation}
+
+\chapter{Compression Tools}
+
+\dots
+
 \appendix
 
 \printbibliography
