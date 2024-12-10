@@ -90,10 +90,91 @@ bit-stream of information.
 
 \tableofcontents
 
-\dots
+\chapter{Information Theory}
 
-% \appendix
+In 1948, Shannon\footnote{Claude Elwood Shannon (1916–2001) was an American mathematician, electrical engineer, computer
+scientist, cryptographer and inventor known as the "father of information theory".}, while working at the Bell Telephone
+Laboratories, published "A Mathematical Theory of Communication" \cite{AMathematicalTheoryOfCommunication}, a seminal paper that
+marked the birth of information theory. In that paper, Shannon defined the concept of "information" and proposed a precise way to
+quantify it-in his theory, the fundamental unit of information is the bit.
 
-% \printbibliography
+Moreover, this discipline plays behind the concepts of entropy, randomness and data compression, all topics that will be discussed
+later on.
+
+\section{Quantifying Information}
+
+For what concerns data compression, information of theory has developed a usable measure of the information we get from observing
+the occurrence of an event having probability \(p\). Therefore information is defined in terms of the probability.
+
+The information measure \(I(p)\) has to match the following axioms (from \cite{AnIntroductionToInformationTheoryAndEntropy}):
+
+\begin{itemize}
+  \item Information is non negative: \(I(p) \geq 0\).
+  \item If an event has probability 1, we get no information: \(I(1) = 0\).
+  \item If two independent events occur (whose probability is the product of their individual probabilities), then the information
+  we get from observing the events is the sum of the two computed individually: \(I(p_1 \cdot p_2) = I(p_1) + I(p_2)\).
+  \item Information measure must be continuous and monotonic (slight changes in probability should result in slight changes in
+  information).
+\end{itemize}
+
+Considering the previous properties as axioms it can be said that: \(I(p^2) = I(p \cdot p) = I(p) + I(p) = 2 \cdot I(p)\).
+Thus: \(I(p^n) = n \cdot I(p)\) (by induction).
+Then: \(I(p) = I(p^{(\frac{1}{m})^m}) = m \cdot I(p^{\frac{1}{m}})\), so \(I(p^{\frac{1}{m}}) = \frac{1}{m} \cdot I(P)\),
+therefore: \(I(p^{\frac{n}{m}}) = \frac{n}{m} \cdot I(p)\).
+In general, considering \(r\) as a real number: \(I(p^a) = a \cdot I(p)\).
+
+From this analysis it was discovered that:
+
+\begin{equation} \label{eq:information1}
+  I(p) = - \log_b p \ (= \log_b \frac{1}{p})
+\end{equation}
+
+Where: \(p = b_1^{\log_{b_1} p}\) and therefore: \(\log_{b_2} p = \log_{b_2} b_1^{\log_{b_1} p} = \log_{b_2} b_1 \cdot \log_{b_1}
+p\). So: \(\log_{b_2} b_1\) is a constant, a scaling factor.
+From another point of view it is a simple change in the unit of measurement.
+
+For this reason:
+
+\begin{equation} \label{eq:information2}
+  I(p) = - \log_2 p
+\end{equation}
+
+\autoref{eq:information2} is the same expression of \autoref{eq:information1} where the unit of measurement is called bits
+(look at \autoref{tab:information_units}). \autoref{eq:information1} was first introduced by Hartley\footnote{Ralph Vinton Lyon
+Hartley (1888-1970) was an American electronics researcher. He invented the Hartley oscillator and the Hartley transform,
+and contributed to the foundations of information theory.} in 1928 trying to measure uncertainty, without talking about
+probability, and lately reviewed by Shannon.
+
+\begin{table}[H]
+  \begin{tblr}{
+      colspec={X[l]X[l]},
+      width=\textwidth,
+      row{odd}={gray!15},
+      row{even}={white},
+      row{1}={bg=gray!90,fg=white},
+      colsep=4pt
+    }
+      \textbf{Unit of measurement} & \textbf{Base} \\
+      bit (or shannon) & \(2\) \\
+      \hline
+      trit & \(3\) \\
+      \hline
+      nat (natural unit of information) & \(e\) \\
+      \hline
+      hartley (or dit) & \(10\) \\
+      \hline
+  \end{tblr}
+  \caption{\label{tab:information_units} Information units of measurement}
+\end{table}
+
+\begin{example}
+Let's talk about flipping a fair coin n times. It gives us: \(- \log_2 \frac{1}{2}^n = \log_2 2^n = n \cdot \log_2 2 = n\) bits of
+information. In fact a sequence of heads (coded as \(1\)) and tails (coded as \(0\)) could be expressed as: \(010010111\dots\),
+these are the \(n\) bits of information.
+\end{example}
+
+\appendix
+
+\printbibliography
 
 \end{document}
