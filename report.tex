@@ -287,6 +287,74 @@ probability of heads or tails when flipping a fair coin.
 \end{figure}
 \end{example}
 
+\chapter{Randomness}
+
+Compression, logically, can be interpreted as the removal of redundancy. The compressed data therefore has no structure and cannot
+be distinguished from random data; in fact, it is random (\cite{AConciseIntroductionToDataCompression}).
+
+\section{Kolmogorov}
+
+% Kolmogorov complexity
+
+\begin{definition}
+\textbf{Kolmogorov complexity} of a binary sequence is the length of the shortest binary program that generates that sequence on a
+universal Turing machine (\cite{ThreeApproachesToTheQuantitativeDefinitionOfInformation}).
+\end{definition}
+
+The concept essentially asserts that a binary sequence is considered random if there is no algorithm shorter than the sequence
+itself that can generate it.
+
+That is related to the concept of incompressibility in algorithmic randomness: a random sequence cannot be compressed into a
+shorter representation than its original size.
+
+So, loosely speaking, the randomness (or Kolmogorov complexity) of a finite sequence is equal to its shortest description.
+
+It is known that the Kolmogorov complexity is not computable.
+
+\section{Martin-Lof} % andrebbero messi 2 punti sopra alla o
+
+Martin-Lof in Algorithmic Randomness and Complexity (\cite{TheDefinitionOfRandomSequences}) shows that the random elements as
+defined by Kolmogorov possess all conceivable statistical properties of randomness.
+
+He also extended the definition for random elements with three approaches to the definition of algorithmic randomness for infinite
+sequences:
+
+\begin{definition}
+The \textbf{computational paradigm}: Random sequences are those whose initial segments are all hard  to describe, or,
+equivalently, hard to compress.
+\end{definition}
+
+\begin{definition}
+The \textbf{measure-theoretic paradigm}: Random sequences  are those with no "effectively rare" properties. If the class of
+sequences satisfying a given property is an effectively null set, then a random sequence should not have this property.
+This approach is the same as the stochastic paradigm: a random sequence should pass all effective statistical tests.
+\end{definition}
+
+\begin{definition}
+The \textbf{unpredictability paradigm}: This approach stems from what is probably the most intuitive conception of randomness,
+namely that one should not be able to predict the next bit of a random sequence, even if one knows all preceding bits, in the same
+way that a coin toss is unpredictable even given the results of previous coin tosses.
+\end{definition}
+
+Taken from \cite{AlgorithmicRandomnessAndComplexity}.
+
+The previous citations aim to observe that the idea of Kolmogorov that random generators didn't exist was lately reviewed and
+while remaining true, extended to infinite sequences.
+
+\section{Random Sequences}
+
+A random sequence should satisfy three conditions:
+
+\begin{itemize}
+  \item The sequence follows a uniform distribution.
+  \item Each element of the sequence is independent of each other.
+  \item The rest of the sequence can not be predicted from any sequence.
+\end{itemize}
+
+Random numbers can be divided into two categories: true random numbers and pseudo-random numbers.
+True random number generators (RNGs) are composed of two parts: entropy source and algorithm post-processing.
+Pseudo random number generators (PRNGs) take a seed as input and generate an output sequence by function.
+
 \appendix
 
 \printbibliography
