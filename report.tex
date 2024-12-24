@@ -472,6 +472,29 @@ It generate codes to represent symbols or groups of symbols.
 
 For details on these implementations and their examples, see \cite{TheDataCompressionBook2ndEdition}.
 
+\subsubsection{Morse Code (1837)}
+
+It was based on the fact that shorter code should be assigned to the most frequent symbols used in English communication.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\textwidth]{morse-code-characters-infographic}
+  \caption{Table of the various Morse code characters}
+  \label{fig:morse_code_pdf}
+\end{figure}
+
+In \autoref{fig:morse_code_pdf} it can be observed that the letter "e" which is the most commonly used letter in the English
+language is assigned the symbol of a single dot.
+The difference in the length of encoding different symbols can be considered as a need that explains why data compression is
+important.
+It takes the name from Morse\footnote{Samuel Finley Breese Morse (1791-1872) was an American inventor and painter. After
+establishing his reputation as a portrait painter, Morse, in his middle age, contributed to the invention of a single-wire
+telegraph system based on European telegraphs. He was a co-developer of Morse code in 1837 and helped to develop the commercial
+use of telegraphy.}, a co-developer, that in 1837 helped to develop the commercial use of telegraphy.
+For further information see
+\href{https://www.electronics-notes.com/articles/summary-infographics/morse-code/morse-code-characters-infographic.php}
+{https://www.electronics-notes.com/articles/summary-infographics/morse-code/morse-code-characters-infographic.php}.
+
 \subsubsection{Shannon-Fano coding (1950)}
 
 Shannon at Bell Labs and Fano\footnote{Roberto Mario "Robert" Fano (1917-2016) was an Italian-American computer scientist and
@@ -482,9 +505,9 @@ It is necessary to know the probability of each symbol's appearance in a message
 A table of codes could be constructed that has several important properties:
 
 \begin{itemize}
-    \item Different codes have different numbers of bits.
-    \item Codes for symbols with low probabilities have more bits, and codes for symbols with high probabilities have fewer bits.
-    \item Though the codes are of different bit lengths, they can be uniquely decoded.
+  \item Different codes have different numbers of bits.
+  \item Codes for symbols with low probabilities have more bits, and codes for symbols with high probabilities have fewer bits.
+  \item Though the codes are of different bit lengths, they can be uniquely decoded.
 \end{itemize}
 
 Arranging the codes as a binary tree solves the problem of decoding these variable-length codes.
@@ -492,17 +515,17 @@ Arranging the codes as a binary tree solves the problem of decoding these variab
 The actual algorithm is:
 
 \begin{enumerate}
-    \item For a given list of symbols, develop a corresponding list of probabilities or frequency counts so that each symbol's
-    relative frequency of occurrence is known.
-    \item Sort the lists of symbols according to frequency, with the most frequently occurring symbols at the top and the least
-    common at the bottom.
-    \item Divide the list into two parts, with the total frequency counts of the upper half being as close to the total of the
-    bottom half as possible.
-    \item The upper half of the list is assigned the binary digit 0, and the lower half is assigned the digit 1. This means
-    that the codes for the symbols in the first half will all start with 0, and the codes in the second half will all start
-    with 1.
-    \item Recursively apply the steps 3 and 4 to each of the two halves, subdividing groups and adding bits to the codes
-    until each symbol has become a corresponding code leaf on the tree.
+  \item For a given list of symbols, develop a corresponding list of probabilities or frequency counts so that each symbol's
+  relative frequency of occurrence is known.
+  \item Sort the lists of symbols according to frequency, with the most frequently occurring symbols at the top and the least
+  common at the bottom.
+  \item Divide the list into two parts, with the total frequency counts of the upper half being as close to the total of the
+  bottom half as possible.
+  \item The upper half of the list is assigned the binary digit 0, and the lower half is assigned the digit 1. This means
+  that the codes for the symbols in the first half will all start with 0, and the codes in the second half will all start
+  with 1.
+  \item Recursively apply the steps 3 and 4 to each of the two halves, subdividing groups and adding bits to the codes
+  until each symbol has become a corresponding code leaf on the tree.
 \end{enumerate}
 
 \begin{example}
@@ -669,7 +692,8 @@ In the following table .
 \subsubsection{Huffman coding (1952)}
 
 It is similar to the Shannon-Fano coding. It was introduced two years later then the Shannon-Fano coding.
-It was first published his 1952 paper, "A Method for the Construction of Minimum Redundancy Codes".
+It was first published in 1952 by Huffman\footnote{David Albert Huffman (1925-1999) was an American pioneer in computer science,
+known for his Huffman coding.} with a paper: "A Method for the Construction of Minimum Redundancy Codes".
 It is more efficient than the other one.
 The Shannon-Fano tree is built top-down, starting by assigning the most significant bits to each code and working down
 the tree until finished.
@@ -782,6 +806,13 @@ As a matter of fact, for a message with an information content of 85.25 bits, Sh
 coding requires only 87.
 
 \end{example}
+
+\subsubsection{RLE (1960s)}
+
+Run-length encoding algorithm stores consecutive occurrences of the same data value as a single occurrence of that data value and
+a counter of the number of consecutive occurrences.
+In some certain circumstances it can be very useful and efficient specially if combined with other techniques.
+In 1983 RLE was patented by \href{https://en.wikipedia.org/wiki/Hitachi}{Hitachi}.
 
 \subsubsection{Arithmetic coding (1976)}
 
@@ -957,8 +988,9 @@ Floating point math is not required.
 
 \subsubsection{LZ77 (1977)}
 
-Ziv and Lempel paper: "A Universal Algorithm for Sequential Data Compression" was published in 1977 inside IEEE Transactions on
-Information Theory.
+This algorithm was introduced by Lempel and Ziv in 1977 with the paper: "A Universal Algorithm for Sequential Data Compression"
+as part of \textit{IEEE Transactions on Information Theory} journal.
+
 LZ77 is revolutionary because that compression uses previously seen text as a dictionary.
 It achieves compression by replacing variable-length strings in the input text with fixed-size pointers into the dictionary.
 
@@ -980,23 +1012,32 @@ Each token consists of three items:
   \item The first symbol in the look-ahead buffer that follows the phrase.
 \end{enumerate}
 
-The decompression algorithm is very similar to the previous one.
+A token is a tuple: \texttt{(offset, length, next symbol)}.
+
+The decompression algorithm is very similar to the compression one.
 It reads in a token, outputs the indicated phrase, outputs the following character, shifts, and repeats.
 It maintains the window, but it does not work with string comparisons.
 
+The dictionary is the text window, so it is adaptive.
+
 \subsubsection{LZ78 (1978)}
 
-Ziv and Lempel paper: "Compression of Individual Sequences via Variable-Rate Coding" was published in 1978 inside IEEE
-Transactions on Information Theory.
+This algorithm was introduced by Lempel and Ziv in 1978 with the paper: "Compression of Individual Sequences via Variable-Rate
+Coding" as part of \textit{IEEE Transactions on Information Theory} journal.
 
 LZ78 abandons the concept of a text window.
 Under LZ78, the dictionary is a potentially unlimited list of previously seen phrases.
 LZ78 also outputs a series of tokens with essentially the same meanings of LZ77.
 Unlike LZ77, the phrase length is not passed since the decoder knows it.
 
+This time token is a tuple: \texttt{(index, next symbol)}.
+Here "index" takes the place of "offset" because of the different structure of the dictionary.
+
 LZ78 adds that phrase to the dictionary.
 After the phrase is added, it will be available to the encoder at any time in the future, not just for the next few thousand
 characters.
+
+Also in this case the decompression algorithm is very similar to the compression one.
 
 This algorithm is "greedy", so it takes locally optimal decision optimal choice at each stage.
 The problem is that in many cases, like in this one, a greedy strategy does not produce an optimal solution.
@@ -1045,6 +1086,20 @@ Step by step the dictionary helps to reduce the volume of data.
 The previous example makes clear that the decompression is done without giving the dictionary to the decompressor, because the
 compression algorithm always outputs the phrase and character components of a code before it uses them.
 This is very important because in this way the compressed data is not burdened with carrying a large dictionary.
+
+\subsubsection{LZW (1984)}
+
+Lempel-Ziv-Welch algorithm was published by Welch in 1984 as an improved implementation of the LZ78 algorithm published by Lempel
+and Ziv in 1978.
+
+Here the token is simply a value: \texttt{index}.
+
+LZW is able to simplify the token because of the way it stores items on the dictionary.
+A new entry to the dictionary is the concatenation of the matched pattern and the next character from the input stream.
+The "next symbol" is always part of the new entry being added to the dictionary.
+
+The decoder, upon receiving the index, retrieves the matched pattern and updates its dictionary concatenating the matched pattern
+and the next inferred character. This means that the dictionary is maintained adaptive.
 
 \section{Comparison of Algorithms}
 
