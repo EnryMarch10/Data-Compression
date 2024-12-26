@@ -1101,6 +1101,16 @@ The "next symbol" is always part of the new entry being added to the dictionary.
 The decoder, upon receiving the index, retrieves the matched pattern and updates its dictionary concatenating the matched pattern
 and the next inferred character. This means that the dictionary is maintained adaptive.
 
+\subsubsection{BWT (1994)}
+
+Burrows-Wheeler transform rearranges a character string into runs of similar characters.
+It was invented by Michael Burrows\footnote{Michael Burrows, FRS (born 1963) is a British computer scientist and the creator of
+the Burrows-Wheeler transform.} and David Wheeler\footnote{David John Wheeler FRS (1927-2004) was a computer scientist and
+professor of computer science at the University of Cambridge.} in 1994.
+
+If the original string had several substrings that occurred often, then the transformed string will have several places where a
+single character is repeated multiple times in a row.
+
 \section{Comparison of Algorithms}
 
 They are useful when done on algorithms of the same compression technique: lossless or lossy.
@@ -1137,7 +1147,100 @@ As the compression speed, it is important is specific use cases, usually when th
 
 \chapter{Compression Tools}
 
-\dots
+It is important to consider that compression tools are logically separated:
+
+\begin{itemize}
+  \item A file archiver combines several files into one file.
+  \item A compression tool compresses and decompresses a single file.
+\end{itemize}
+
+These tools are often used in sequence to create compressed archives.
+In some programs the two phases are hidden by the program itself.
+
+\section{Archiving}
+
+It combines several files into a single file with a size equivalent to the sum of each single file dimension.
+
+% \subsection{Cross-Platform}
+
+% \begin{itemize}
+%   \item \texttt{7-Zip}: Apart from its native Windows origins, \texttt{7-Zip} is available for Linux and macOS through ports like
+%         \texttt{p7zip}.
+%   \item \texttt{ZIP}: Supported natively across Windows, macOS, and many Linux distributions.
+%   \item \texttt{RAR}: Popular in the Windows world but also available for Linux and macOS.
+% \end{itemize}
+
+\subsection{Unix}
+
+According to the Unix philosophy the archiving process is separated from the compression process.
+Unix known programs that aim to archiving only are \texttt{ar}, \texttt{cpio}, \texttt{tar} and \texttt{libarchive}.
+
+\texttt{ar} was the original archiver, but has been largely replaced by \texttt{tar}.
+\texttt{tar} derived from "tape archive" , as it was originally developed to write data to sequential I/O devices with no file
+system of their own, such as devices that use magnetic tape.
+
+In 2001, IEEE defined a new pax format which is basically tar with additional extended attributes.
+The name "pax" is an acronym for portable archive exchange, but is also an allusion to the Latin word for "peace"; intended as a
+peaceful unification of both \texttt{tar} and \texttt{cpio}.
+
+\texttt{libarchive} is a free and open-source library, it's development was started in 2003.
+It works on most Unix-like systems and Windows.
+
+\subsection{Windows}
+
+By default treats ZIP archive format that supports lossless data compression.
+Native support was added as of the year 2000 in Windows ME.
+
+One of the most common programs used in Windows is \texttt{7z} (7-Zip) that has its own archive format called 7z, but can read and
+write several others, so it is widespread for compatibility.
+
+\subsection{Mac OS X}
+
+Apple has included built-in ZIP support in macOS 10.3 (via BOMArchiveHelper, now Archive Utility) and later.
+
+\section{Compression}
+
+A comparison between some of the following compression tools can be found at
+\href{https://www.redpill-linpro.com/techblog/2024/12/18/compression-tool-test.html}
+{https://www.redpill-linpro.com/techblog/2024/12/18/compression-tool-test.html}.
+
+\subsection{lz4}
+
+It is a lossless data compression algorithm that is focused on compression and decompression speed.
+It belongs to the LZ77 family.
+It is multi-threaded by default.
+
+\subsection{gzip}
+
+GNU zip is based on the DEFLATE algorithm.
+DEFLATE is a combination of LZ77 and Huffman coding.
+It is not multi-threaded.
+\texttt{pigz} is the parallel version.
+
+\subsection{bzip2}
+
+It uses several layers of compression techniques, such as run-length encoding (RLE), Burrows-Wheeler transform (BWT),
+move-to-front transform (MTF), and Huffman coding.
+It is not multi-threaded.
+\texttt{pbzip2} is the parallel version.
+
+\subsection{lzma}
+
+For compression/decompression the Lempel-Ziv-Markov chain algorithm (LZMA) is used.
+This algorithm was introduced in 1998 and is based on LZ77.
+It was developed by Igor Pavlov the author of 7-Zip.
+It is not multi-threaded.
+
+\subsection{xz}
+
+For compression/decompression LZMA2 is used, it is an improved version of the Lempel-Ziv-Markov chain algorithm (LZMA).
+It is multi-threaded by default.
+
+\subsection{zstd}
+
+Zstandard is a lossless data compression algorithm developed by Yann Collet at Facebook.
+Zstd is the corresponding reference implementation in C, released as open-source software in 2016.
+It is multi-threaded by default.
 
 \appendix
 

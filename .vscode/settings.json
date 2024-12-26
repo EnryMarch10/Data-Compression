@@ -9,6 +9,7 @@
         "Breese",
         "captionpos",
         "colsep",
+        "cpio",
         "Downey",
         "Eduard",
         "eprint",
@@ -23,10 +24,13 @@
         "lccn",
         "Lempel",
         "lightgray",
+        "LZMA",
         "morecomment",
         "morestring",
         "Naim",
         "numberstyle",
+        "pbzip",
+        "pigz",
         "PRNGs",
         "Rissanen",
         "Salomon",
@@ -34,6 +38,9 @@
         "stochasticity",
         "stringstyle",
         "trit",
-        "Vinton"
+        "Vinton",
+        "Yann",
+        "Zstandard",
+        "zstd"
     ]
 }
