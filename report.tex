@@ -94,25 +94,8 @@
   showstringspaces=false                % Don't show spaces in strings
 }
 
-% Package to keep track of the total number of pages
-\usepackage{lastpage}
-\usepackage{fancyhdr}
-
-\fancypagestyle{fancy}{
-  \fancyhf{} % Clear all header and footer fields
-  \fancyfoot[C]{\thepage\ of \pageref{LastPage}}
-  \renewcommand{\headrulewidth}{0pt} % No line at the top
-  \renewcommand{\footrulewidth}{0.4pt} % Line at the bottom
-}
-
-\fancypagestyle{plain}{
-  \fancyhf{} % Clear all header and footer fields
-  \fancyfoot[C]{\thepage\ of \pageref{LastPage}}
-  \renewcommand{\headrulewidth}{0pt} % No line at the top
-  \renewcommand{\footrulewidth}{0.4pt} % Line at the bottom
-}
-
-\pagestyle{fancy}
+\usepackage{lastpage} % To keep track of the total number of pages
+\usepackage{fancyhdr} % To define custom page numbering
 
 \begin{document}
 
@@ -144,8 +127,18 @@ the original message or some approximation of it from the compressed representat
 
 \end{abstract}
 
+\fancypagestyle{fancy}{\fancyfoot[C]{\thepage}}
+\fancypagestyle{plain}{\fancyfoot[C]{\thepage}}
+\pagestyle{fancy}
+\pagenumbering{roman}
 \tableofcontents
+\clearpage
 
+\fancypagestyle{fancy}{\fancyfoot[C]{\thepage\ of \pageref{LastPage}}}
+\fancypagestyle{plain}{\fancyfoot[C]{\thepage\ of \pageref{LastPage}}}
+\pagestyle{fancy}
+\newpage
+\pagenumbering{arabic}
 \chapter{Information Theory}
 
 In 1948, Shannon\footnote{Claude Elwood Shannon (1916-2001) was an American mathematician, electrical engineer, computer
@@ -1311,7 +1304,9 @@ Zstd is the corresponding reference implementation in C, released as open-source
 available at \url{https://github.com/facebook/zstd}} in 2016.
 It is multi-threaded by default.
 
-\chapter*{Appendix}
+\appendix
+
+\chapter{Conclusions}
 
 Ultimately, the selection of a compression method depends on the specific requirements of the task at hand.
 
