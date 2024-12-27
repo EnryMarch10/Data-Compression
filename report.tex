@@ -30,26 +30,6 @@
 }
 \date{\today}
 
-% Package to keep track of the total number of pages
-\usepackage{lastpage}
-\usepackage{fancyhdr}
-
-\fancypagestyle{fancy}{
-  \fancyhf{}
-  \fancyfoot[C]{\thepage\ of \pageref{LastPage}}
-  \renewcommand{\headrulewidth}{0pt}
-  \renewcommand{\footrulewidth}{0.4pt}
-}
-
-\fancypagestyle{plain}{
-  \fancyhf{}
-  \fancyfoot[C]{\thepage\ of \pageref{LastPage}}
-  \renewcommand{\headrulewidth}{0pt}
-  \renewcommand{\footrulewidth}{0.4pt}
-}
-
-\pagestyle{fancy}
-
 \usepackage[backend=biber, style=alphabetic, sorting=ydnt]{biblatex}
 \addbibresource{references.bib}
 
@@ -113,6 +93,26 @@
   captionpos=b,                         % Caption position at the bottom
   showstringspaces=false                % Don't show spaces in strings
 }
+
+% Package to keep track of the total number of pages
+\usepackage{lastpage}
+\usepackage{fancyhdr}
+
+\fancypagestyle{fancy}{
+  \fancyhf{} % Clear all header and footer fields
+  \fancyfoot[C]{\thepage\ of \pageref{LastPage}}
+  \renewcommand{\headrulewidth}{0pt} % No line at the top
+  \renewcommand{\footrulewidth}{0.4pt} % Line at the bottom
+}
+
+\fancypagestyle{plain}{
+  \fancyhf{} % Clear all header and footer fields
+  \fancyfoot[C]{\thepage\ of \pageref{LastPage}}
+  \renewcommand{\headrulewidth}{0pt} % No line at the top
+  \renewcommand{\footrulewidth}{0.4pt} % Line at the bottom
+}
+
+\pagestyle{fancy}
 
 \begin{document}
 
@@ -492,8 +492,7 @@ establishing his reputation as a portrait painter, Morse, in his middle age, con
 telegraph system based on European telegraphs. He was a co-developer of Morse code in 1837 and helped to develop the commercial
 use of telegraphy.}, a co-developer, that in 1837 helped to develop the commercial use of telegraphy.
 For further information see
-\href{https://www.electronics-notes.com/articles/summary-infographics/morse-code/morse-code-characters-infographic.php}
-{https://www.electronics-notes.com/articles/summary-infographics/morse-code/morse-code-characters-infographic.php}.
+\url{https://www.electronics-notes.com/articles/summary-infographics/morse-code/morse-code-characters-infographic.php}.
 
 \subsubsection{Shannon-Fano coding (1950)}
 
@@ -1075,10 +1074,10 @@ Consider the following input text: "DAD DADA DADDY DADO...".
       6 & O & DADO & \\
       \hline
   \end{tblr}
-  \caption{\label{tab:ex_arithmetic_encoding} Arithmetic encoding.}
+  \caption{\label{tab:ex_lz78} LZ78 encoding.}
 \end{table}
 
-Each new phrase that was not seen before is also added to the dictionary that initially was empty.
+In \autoref{tab:ex_lz78} each new phrase that was not seen before is also added to the dictionary that initially was empty.
 Step by step the dictionary helps to reduce the volume of data.
 
 \end{example}
@@ -1104,12 +1103,22 @@ and the next inferred character. This means that the dictionary is maintained ad
 \subsubsection{BWT (1994)}
 
 Burrows-Wheeler transform rearranges a character string into runs of similar characters.
-It was invented by Michael Burrows\footnote{Michael Burrows, FRS (born 1963) is a British computer scientist and the creator of
-the Burrows-Wheeler transform.} and David Wheeler\footnote{David John Wheeler FRS (1927-2004) was a computer scientist and
+It was invented by Michael Burrows\footnote{Michael Burrows (born 1963) is a British computer scientist and the creator of the
+Burrows-Wheeler transform.} and David Wheeler\footnote{David John Wheeler (1927-2004) was a computer scientist and
 professor of computer science at the University of Cambridge.} in 1994.
 
 If the original string had several substrings that occurred often, then the transformed string will have several places where a
 single character is repeated multiple times in a row.
+
+\subsubsection{ANS (2014)}
+
+Asymmetric numeral systems is a family of entropy encoding methods introduced by Jarek Duda\footnote{Jarosław Duda (born 1963),
+also known as Jarek Duda, is a Polish computer scientist and an assistant professor at the Institute of Computer Science and
+Computational Mathematics of the Jagiellonian University in Kraków. He is known as the inventor of asymmetric numeral systems
+(ANS), a family of entropy encoding methods widely used in data compression.} and used in data compression since 2014 due to
+improved performance compared to previous methods.
+ANS combines the compression ratio of arithmetic coding with a processing cost similar to that of Huffman coding.
+It's tabled variant, tANS, is achieved by constructing a finite-state machine.
 
 \section{Comparison of Algorithms}
 
@@ -1133,7 +1142,7 @@ An important factor when considering data compression is the "compression ratio"
 It is important is specific use cases, usually when the network is involved (look at \autoref{eq:factor_decompression_speed}).
 
 \begin{equation} \label{eq:factor_compression_speed}
-  compression speed (MB / s) = \frac{uncompressed file size (MB)}{compression time (s)}
+  compression speed (SIZE / s) = \frac{uncompressed file size (SIZE)}{compression time (s)}
 \end{equation}
 
 \subsection{Decompression Speed}
@@ -1142,8 +1151,48 @@ As the compression speed, it is important is specific use cases, usually when th
 \autoref{eq:factor_decompression_speed}).
 
 \begin{equation} \label{eq:factor_decompression_speed}
-  decompression speed (MB / s) = \frac{uncompressed file size (MB)}{uncompression time (s)}
+  decompression speed (SIZE / s) = \frac{uncompressed file size (SIZE)}{uncompression time (s)}
 \end{equation}
+
+\subsection{CPU usage}
+
+The use can differ from \(100 \%\) (a single core) to \(N \times 100 \%\) (\(N\) cores), where \(N\) is the number of logical
+cores of the CPU.
+It has to be considered than even if a multi-threaded algorithm is generally faster than it's equivalent single-threaded
+algorithm, the higher CPU usage is something that could be considered in the comparison of algorithms, depending on the needs.
+In practical tests the percentage could be different from a multiple of \(100 \%\), for example an average.
+
+In most cases every algorithm is implemented to work on the CPU only, because GPUs are expensive and the hardware is needed.
+If it could work on the GPU it should be specified and tests should consider that.
+In fact their results should not be compared with other algorithms implementations that work on the CPU.
+
+\subsection{Memory usage}
+
+How much RAM the implementation of the algorithm needs.
+
+\subsection{Time}
+
+It could be simply considered the \hyperref[subsubsec:wall_time]{total elapsed time}, but a more accurate analysis can be done.
+
+\subsubsection{User Time}
+\label{subsubsec:user_time}
+
+The amount of CPU time spent executing user-level code.
+It does not include time spent in kernel mode (e.g., for system calls or I/O operations).
+
+\subsubsection{System Time}
+\label{subsubsec:system_time}
+
+The amount of CPU time spent executing system-level code on behalf of the program (in kernel mode).
+It includes time spent handling system calls (reading a file, memory allocation, networking...) and overhead for interacting with
+hardware or operating system resources.
+
+\subsubsection{Wall Time}
+\label{subsubsec:wall_time}
+
+The actual elapsed real-world time taken for the program to run from start to finish.
+It is the sum of the \hyperref[subsubsec:user_time]{\texttt{user time}} and the
+\hyperref[subsubsec:system_time]{\texttt{system time}}.
 
 \chapter{Compression Tools}
 
@@ -1160,15 +1209,6 @@ In some programs the two phases are hidden by the program itself.
 \section{Archiving}
 
 It combines several files into a single file with a size equivalent to the sum of each single file dimension.
-
-% \subsection{Cross-Platform}
-
-% \begin{itemize}
-%   \item \texttt{7-Zip}: Apart from its native Windows origins, \texttt{7-Zip} is available for Linux and macOS through ports like
-%         \texttt{p7zip}.
-%   \item \texttt{ZIP}: Supported natively across Windows, macOS, and many Linux distributions.
-%   \item \texttt{RAR}: Popular in the Windows world but also available for Linux and macOS.
-% \end{itemize}
 
 \subsection{Unix}
 
@@ -1200,17 +1240,32 @@ Apple has included built-in ZIP support in macOS 10.3 (via BOMArchiveHelper, now
 
 \section{Compression}
 
-A comparison between some of the following compression tools can be found at
-\href{https://www.redpill-linpro.com/techblog/2024/12/18/compression-tool-test.html}
-{https://www.redpill-linpro.com/techblog/2024/12/18/compression-tool-test.html}.
+A comparison between some of the following compression tools can be found online but it is important to stay updated.
+About compression in Linux many articles can be found.
+At \url{https://www.redpill-linpro.com/techblog/2024/12/18/compression-tool-test.html} different algorithms are tested with a
+single large file.
+Moreover at \url{https://www.baeldung.com/linux/compression-methods-comparison} a more accurate comparison that uses the
+\href{https://github.com/MiloszKrajewski/SilesiaCorpus}{Silesia Corpus GitHub repository} as a collection of files used for
+compression benchmarks.
+
+The following compression programs are lossless.
 
 \subsection{lz4}
+\label{subsec:lz4}
 
-It is a lossless data compression algorithm that is focused on compression and decompression speed.
+It is focused on compression and decompression speed.
 It belongs to the LZ77 family.
 It is multi-threaded by default.
 
+\subsection{compress}
+\label{subsec:compress}
+
+It is focused on compression and decompression speed.
+It uses LZW.
+It is not multi-threaded.
+
 \subsection{gzip}
+\label{subsec:gzip}
 
 GNU zip is based on the DEFLATE algorithm.
 DEFLATE is a combination of LZ77 and Huffman coding.
@@ -1218,13 +1273,22 @@ It is not multi-threaded.
 \texttt{pigz} is the parallel version.
 
 \subsection{bzip2}
+\label{subsec:bzip2}
 
+It is the successor of the \texttt{bzip} obsolete version.
 It uses several layers of compression techniques, such as run-length encoding (RLE), Burrows-Wheeler transform (BWT),
 move-to-front transform (MTF), and Huffman coding.
 It is not multi-threaded.
 \texttt{pbzip2} is the parallel version.
 
+\subsection{bzip3}
+\label{subsec:bzip3}
+
+It is a modern implementation of bzip2 with enhancements.
+It is not multi-threaded.
+
 \subsection{lzma}
+\label{subsec:lzma}
 
 For compression/decompression the Lempel-Ziv-Markov chain algorithm (LZMA) is used.
 This algorithm was introduced in 1998 and is based on LZ77.
@@ -1232,18 +1296,39 @@ It was developed by Igor Pavlov the author of 7-Zip.
 It is not multi-threaded.
 
 \subsection{xz}
+\label{subsec:xz}
 
 For compression/decompression LZMA2 is used, it is an improved version of the Lempel-Ziv-Markov chain algorithm (LZMA).
 It is multi-threaded by default.
 
 \subsection{zstd}
+\label{subsec:zstd}
 
 Zstandard is a lossless data compression algorithm developed by Yann Collet at Facebook.
-Zstd is the corresponding reference implementation in C, released as open-source software in 2016.
+Zstandard uses a dictionary windows (like LZ77) combined with fast entropy-coding.
+It uses Huffman coding and finite-state entropy (FSE) (a version of ANS, tANS).
+Zstd is the corresponding reference implementation in C, released as open-source software\footnote{the official implementation is
+available at \url{https://github.com/facebook/zstd}} in 2016.
 It is multi-threaded by default.
 
-\appendix
+\chapter*{Appendix}
+
+Ultimately, the selection of a compression method depends on the specific requirements of the task at hand.
+
+For tasks prioritizing speed, tools with a lower compression ratio like \hyperref[subsec:compress]{\texttt{compress}} and
+\hyperref[subsec:lz4]{\texttt{lz4}} are excellent choices.
+Small files might be more efficiently handled by fast compressing tools like \hyperref[subsec:gzip]{\texttt{gzip}} (or better
+\texttt{pigz}).
+Large files benefit from high compression ratio tools like \hyperref[subsec:bzip2]{\texttt{bzip2}} (or better \texttt{pbzip2})
+and \hyperref[subsec:bzip3]{\texttt{bzip3}}.
+
+The file type also matters, with textual data typically compressing well with the tools previously seen.
+On the other hand binary files might see better results with \hyperref[subsec:zstd]{\texttt{zstd}} which has a high compression
+ratio and it is very fast.
+Furthermore \hyperref[subsec:lzma]{\texttt{lzma}} and \hyperref[subsec:xz]{\texttt{xz}} have impressive compression levels
+but require a lot of time.
 
 \printbibliography
+\thispagestyle{empty}
 
 \end{document}
