@@ -337,35 +337,23 @@ coin.
 
 \end{example}
 
-\chapter{Randomness}
+\chapter{Randomness} \label{chap:randomness}
 
 Compression, logically, can be interpreted as the removal of redundancy. The compressed data therefore has no structure and cannot
 be distinguished from random data; in fact, it is random (\cite{AConciseIntroductionToDataCompression}).
 
-\section{Kolmogorov}
+\section{Origins}
 
-\begin{definition}
-\textbf{Kolmogorov complexity} of a binary sequence is the length of the shortest binary program that generates that sequence on a
-universal Turing machine (\cite{ThreeApproachesToTheQuantitativeDefinitionOfInformation}).
-\end{definition}
+Kolmogorov\footnote{Andrey Nikolaevich Kolmogorov (1903-1987) was a Soviet mathematician who played a central role in the creation
+of modern probability theory. He also contributed to the mathematics of algorithmic information theory.} was one of first
+mathematicians that wrote about randomness.
 
-The concept essentially asserts that a binary sequence is considered random if there is no algorithm shorter than the sequence
-itself that can generate it.
+In 1964 and 1965, Martin-Löf\footnote{Per Erik Rutger Martin-Löf (born 1942) is a Swedish logician, philosopher, and mathematical
+statistician.} was a student in Moscow under the supervision of Kolmogorov.
+In 1966, he wrote "The definition of random sequences" that gave the first suitable definition of a random sequence.
 
-That is related to the concept of incompressibility in algorithmic randomness: a random sequence cannot be compressed into a
-shorter representation than its original size.
-
-So, loosely speaking, the randomness (or Kolmogorov complexity) of a finite sequence is equal to its shortest description.
-
-It is known that the Kolmogorov complexity is not computable.
-
-\section{Martin-Lof}
-
-Martin-Lof in Algorithmic Randomness and Complexity (\cite{TheDefinitionOfRandomSequences}) shows that the random elements as
-defined by Kolmogorov possess all conceivable statistical properties of randomness.
-
-He also extended the definition for random elements with three approaches to the definition of algorithmic randomness for infinite
-sequences:
+Martin-Löf extended the definition for random elements with three approaches (\cite{AlgorithmicRandomnessAndComplexity}) to the
+definition of algorithmic randomness for infinite sequences:
 
 \begin{definition}
 The \textbf{computational paradigm}: Random sequences are those whose initial segments are all hard  to describe, or,
@@ -373,8 +361,9 @@ equivalently, hard to compress.
 \end{definition}
 
 \begin{definition}
-The \textbf{measure-theoretic paradigm}: Random sequences  are those with no "effectively rare" properties. If the class of
-sequences satisfying a given property is an effectively null set, then a random sequence should not have this property.
+The \textbf{measure-theoretic paradigm}: Random sequences  are those with no "effectively rare" properties.
+If the class of sequences satisfying a given property is an effectively null set, then a random sequence should not have this
+property.
 This approach is the same as the stochastic paradigm: a random sequence should pass all effective statistical tests.
 \end{definition}
 
@@ -384,10 +373,39 @@ namely that one should not be able to predict the next bit of a random sequence,
 way that a coin toss is unpredictable even given the results of previous coin tosses.
 \end{definition}
 
-Taken from \cite{AlgorithmicRandomnessAndComplexity}.
+Despite the definitions he real improvement of Martin-Löf was the introduction of tests for randomness
+(\cite{TheDefinitionOfRandomSequences}).
 
-The previous citations aim to observe that the idea of Kolmogorov that random generators didn't exist was lately reviewed and
-while remaining true, extended to infinite sequences.
+\begin{example}
+Let's consider a long binary sequence "000...0" of all zeros.
+It can be said that this sequence does not converge to 1/2 in the probability of 1 and 0, so it is clearly non-random.
+But the reverse is not true: For instance "101101101101101...101" is not random because "101" occurs too often.
+Moreover not random sequences like the digits of \(\pi\), cause the most difficulties.
+In general, tests for randomness help us to understand if a sequence is random or not.
+\end{example}
+
+\section{Algorithmic Information Theory}
+
+Following these studies the algorithmic information theory\footnote{The field of algorithmic information theory (AIT) arises by
+mixing information theory and computation theory to obtain an objective and absolute notion of information in an individual
+object.} (\cite{AlgorithmicInformationTheoryBriefGuide}) formally defines what is randomness of individual objects
+(binary strings).
+
+\begin{definition}
+\textbf{Kolmogorov complexity} of a binary sequence is the length of the shortest binary program that generates that sequence on a
+universal Turing machine (\cite{ThreeApproachesToTheQuantitativeDefinitionOfInformation}).
+\end{definition}
+
+The concept essentially asserts that a binary sequence is considered random if there is no algorithm shorter than the sequence
+itself that can generate it.
+Another way to say it is that a binary sequence has no simple description other than writing down the string itself.
+
+That is related to the concept of incompressibility in algorithmic randomness: a random sequence cannot be compressed into a
+shorter representation than its original size.
+
+So, loosely speaking, the randomness (or Kolmogorov complexity) of a finite sequence is equal to its shortest description.
+
+Furthermore it is known that the Kolmogorov complexity is not computable.
 
 \section{Random Sequences}
 
@@ -402,6 +420,13 @@ A random sequence should satisfy three conditions:
 Random numbers can be divided into two categories: true random numbers and pseudo-random numbers.
 True random number generators (RNGs) are composed of two parts: entropy source and algorithm post-processing.
 Pseudo random number generators (PRNGs) take a seed as input and generate an output sequence by function.
+
+Nowadays, in commercial computers only PRNGs are available, in fact entropy sources are something external from digital computers.
+In practice an entropy source is a physical or natural phenomenon that provides unpredictable, non-deterministic data.
+Considering quantum computing\footnote{A quantum computer is a computer that exploits quantum mechanical phenomena. Here the bit
+is replaced by the qubit, that in opposition to it has not two states but a probabilistic output of a classical bit.} the things
+could be completely different.
+In fact intrinsically random properties of quantum systems are one possible entropy source.
 
 \chapter{Data Compression}
 
@@ -463,7 +488,8 @@ It generate codes to represent symbols or groups of symbols.
 
 \subsection{Implementations}
 
-For details on these implementations and their examples, see \cite{TheDataCompressionBook2ndEdition}.
+For details on these implementations and their examples, see \cite{TheDataCompressionBook2ndEdition} and
+\cite{IntroductionToDataCompression}.
 
 \subsubsection{Morse Code (1837)}
 
@@ -1147,7 +1173,7 @@ As the compression speed, it is important is specific use cases, usually when th
   decompression speed (SIZE / s) = \frac{uncompressed file size (SIZE)}{uncompression time (s)}
 \end{equation}
 
-\subsection{CPU usage}
+\subsection{CPU Usage}
 
 The use can differ from \(100 \%\) (a single core) to \(N \times 100 \%\) (\(N\) cores), where \(N\) is the number of logical
 cores of the CPU.
@@ -1159,7 +1185,7 @@ In most cases every algorithm is implemented to work on the CPU only, because GP
 If it could work on the GPU it should be specified and tests should consider that.
 In fact their results should not be compared with other algorithms implementations that work on the CPU.
 
-\subsection{Memory usage}
+\subsection{Memory Usage}
 
 How much RAM the implementation of the algorithm needs.
 
@@ -1186,6 +1212,16 @@ hardware or operating system resources.
 The actual elapsed real-world time taken for the program to run from start to finish.
 It is the sum of the \hyperref[subsubsec:user_time]{\texttt{user time}} and the
 \hyperref[subsubsec:system_time]{\texttt{system time}}.
+
+\subsection{Randomness Tests}
+
+For what said in \autoref{chap:randomness}, an interesting way to understand the efficiency of compression algorithms is to
+analyze the randomness of the output string of the compression algorithm.
+
+This factor is not so indicative like the others but some tests has been yet done.
+In \cite{OnTheRandomnessOfCompressedData} it is stated that surprisingly, the best compression schemes do not have the most random
+output.
+This suggests that these schemes can be further improved.
 
 \chapter{Compression Tools}
 
