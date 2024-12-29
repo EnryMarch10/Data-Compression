@@ -8,21 +8,20 @@
 
 \usepackage{float}
 
-\usepackage{url}
+\usepackage{url} % To put URLs
 \usepackage{xurl} % Avoids URLs to overfull \hbox
 
 \usepackage{graphicx}
-\graphicspath{{img/}} % global configuration
+\graphicspath{{img/}} % Images global configuration
 \usepackage[colorlinks=false, pdfborder={0 0 0}]{hyperref}
 
 \usepackage{tabularray}
 
-% To use listings
 \usepackage[table, svgnames]{xcolor}
-\usepackage{listings}
+\usepackage{listings} % To use listings
 
 \title{
-  Data Compression
+  Understanding Data Compression: Theory, Techniques, and Modern Tools
 }
 \author{
   Enrico Marchionni\\
@@ -33,18 +32,15 @@
 \usepackage[backend=biber, style=alphabetic, sorting=ydnt]{biblatex}
 \addbibresource{references.bib}
 
-\usepackage{amsthm} % to make definitions
-\newtheorem{definition}{Definition}[section] % custom environment for definitions
-\newtheorem{example}{Example}
+\usepackage{amsthm} % To make definitions
+\newtheorem{definition}{Definition}[section] % Custom environment for definitions
+\newtheorem{example}{Example} % Custom environment for examples
 
-% for graphs and overlaying text
-\usepackage{tikz}
+\usepackage{tikz} % For graphs and overlaying text
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
 \usepackage{amsmath} % For math symbols
-
-% for binary trees
-\usepackage{forest}
+\usepackage{forest} % For binary trees
 
 \definecolor{C_comment_green}{rgb}{87, 166, 74}
 \definecolor{C_keyword_blue}{RGB}{86, 156, 214}
@@ -105,25 +101,33 @@
 
 Data compression is intended as the practice of reducing the size of binary digital data.
 It could be considered as a procedure that takes a bit-stream in input and returns another bit-stream as output.
-The output stream may be of equal length or shorter than the input.
+The result may be of equal length or hopefully shorter than the original.
 
-The key to understand data compression is to discuss the distinction between data and information.
-It can be said that data is how information is represented\footnote{ex. the number 0 can be expressed in binary as a sequence of a
+The crucial point to understand data compression is to discuss the distinction between data and information.
+It can be said that data is how information is represented\footnote{Ex. the number 0 can be expressed in binary as a sequence of a
 certain number of zeros, from \(1\) to \(\infty\), and we know that calculators use at least 8 bits, let's say \(n\)
 (considering it as a multiple of 8), to represent an integer number. So at the end \(n - 1\) bits are redundant in the 0
-representation on a calculator.}. In simple terms, data can be compressed because its original representation is not the shortest
-possible. The goal of data compression is to reduce data by maintaining the same information.
+representation on a calculator.}.
+In simple terms, data can be compressed because its original representation is not the shortest possible.
+The goal of data compression is to reduce data redundancy by maintaining the same amount of information.
 
-The counterpart is that in our time data is intrinsically redundant. And this redundancy is needed.
-So data compression isn't only a procedure that goes from a bit-stream to another one not longer, but it requires also another
-procedure that regenerates the original bit-stream of data, necessary for practical use, from the previously given output
-bit-stream of information.
+The counterpart is that in our time data is inherently redundant, enabling applications to handle various formats.
+So data compression isn't only a procedure that goes from a bit-stream to another one not longer.
+In fact, it is a more complex system that requires also another procedure that takes the previously given output bit-stream of
+information and regenerates the original bit-stream of data.
 
-This makes clear that the task of compression consists of two components, an \textit{encoding} algorithm that takes a message
-and generates a “compressed” representation (hopefully with fewer bits), and a \textit{decoding} algorithm that reconstructs
+This makes clear that the task of compression is a two-step process: an \textit{encoding} algorithm that takes a message
+and generates a "compressed" representation (hopefully with fewer bits), and a \textit{decoding} algorithm that reconstructs
 the original message or some approximation of it from the compressed representation.
 
-\dots % difference between information and meaning???
+This report reviews the key data compression techniques and tools.
+It begins by exploring the concepts of information and entropy, along with methods for quantifying them, and examines the role of
+randomness in these contexts.
+Additionally, after talking about the main data compression techniques it discusses the primary parameters used to compare
+algorithms.
+Finally, the report provides an overview of the most widely used lossless compression tools, relating them to the previously
+discussed techniques.
+The conclusions offer practical recommendations on the best tools to use, tailored to specific needs.
 
 \end{abstract}
 
@@ -144,16 +148,19 @@ the original message or some approximation of it from the compressed representat
 In 1948, Shannon\footnote{Claude Elwood Shannon (1916-2001) was an American mathematician, electrical engineer, computer
 scientist, cryptographer and inventor known as the "father of information theory".}, while working at the Bell Telephone
 Laboratories, published "A Mathematical Theory of Communication" \cite{AMathematicalTheoryOfCommunication}, a seminal paper that
-marked the birth of information theory. In that paper, Shannon defined the concept of "information" and proposed a precise way to
-quantify it-in his theory, the fundamental unit of information is the bit.
+marked the birth of information theory\footnote{Information theory is the mathematical study of the quantification, storage, and
+communication of information.}.
+In that paper, Shannon defined the concept of "information" and proposed a precise way to quantify it in his theory, the
+fundamental unit of information is the bit.
 
 Moreover, this discipline plays behind the concepts of entropy, randomness and data compression, all topics that will be discussed
 later on.
 
 \section{Quantifying Information}
 
-For what concerns data compression, information of theory has developed a usable measure of the information we get from observing
-the occurrence of an event having probability \(p\). Therefore information is defined in terms of the probability.
+For what concerns data compression, the information theory has developed a usable measure of the information we get from observing
+the occurrence of an event having probability \(p\).
+Therefore information is defined in terms of the probability.
 
 The information measure \(I(p)\) has to match the following axioms (from \cite{AnIntroductionToInformationTheoryAndEntropy}):
 
@@ -182,17 +189,17 @@ Where: \(p = b_1^{\log_{b_1} p}\) and therefore: \(\log_{b_2} p = \log_{b_2} b_1
 p\). So: \(\log_{b_2} b_1\) is a constant, a scaling factor.
 From another point of view it is a simple change in the unit of measurement.
 
-For this reason:
+For this reason, as a standard, it can be considered:
 
 \begin{equation} \label{eq:information2}
   I(p) = - \log_2 p
 \end{equation}
 
-\autoref{eq:information2} is the same expression of \autoref{eq:information1} where the unit of measurement is called bits
-(look at \autoref{tab:information_units}). \autoref{eq:information1} was first introduced by Hartley\footnote{Ralph Vinton Lyon
-Hartley (1888-1970) was an American electronics researcher. He invented the Hartley oscillator and the Hartley transform,
-and contributed to the foundations of information theory.} in 1928 trying to measure uncertainty, without talking about
-probability, and lately reviewed by Shannon.
+\autoref{eq:information2} is the same expression of \autoref{eq:information1} except for the fact that the unit of measurement is
+specified to bits (look at \autoref{tab:information_units}).
+\autoref{eq:information1} was first introduced by Hartley\footnote{Ralph Vinton Lyon Hartley (1888-1970) was an American
+electronics researcher. He invented the Hartley oscillator and the Hartley transform, and contributed to the foundations of
+information theory.} in 1928 trying to measure uncertainty, without talking about probability, and lately reviewed by Shannon.
 
 \begin{table}[H]
   \begin{tblr}{
@@ -224,30 +231,31 @@ these are the \(n\) bits of information.
 
 \chapter{Entropy}
 
-Entropy is a concept that was explained in many fields. Previously defined by Clausius\footnote{Rudolf Julius Emanuel Clausius
-(1822-1888) was a German physicist and mathematician and is considered one of the central founding fathers of the science of
-thermodynamics.} and Boltzmann\footnote{Ludwig Eduard Boltzmann (1844-1906) was an Austrian physicist and philosopher. His
-greatest achievements were the development of statistical mechanics and the statistical explanation of the second law of
-thermodynamics.} was later used by Shannon. It is believed that these three definitions are indeed equivalent although no formal
-proof of this is available (as discussed in \cite{EntropyAndInformationTheoryUsesAndMisuses}). Informally it is advantageous to
-remember that in statistical physics entropy represents the randomness or disorder of a system.
+Entropy is a concept that was explained in many fields.
+Previously defined by Clausius\footnote{Rudolf Julius Emanuel Clausius (1822-1888) was a German physicist and mathematician and is
+considered one of the central founding fathers of the science of thermodynamics.} and Boltzmann\footnote{Ludwig Eduard Boltzmann
+(1844-1906) was an Austrian physicist and philosopher. His greatest achievements were the development of statistical mechanics and
+the statistical explanation of the second law of thermodynamics.} was later interpreted by Shannon.
+It is believed that their three definitions are indeed equivalent although no formal proof of this is available (as discussed in
+\cite{EntropyAndInformationTheoryUsesAndMisuses}).
+Informally it is beneficial to remember that in statistical physics entropy represents the disorder of a system.
 
 \section{Quantifying Entropy}
 
 Here is how Shannon introduced the measure of Information:
 \begin{quote}
-Suppose we have a set of possible events whose probabilities of occurrence are \(p_1, p_2, \dots, p_n\). These probabilities are
-known but that is all we know concerning which event will occur. Can we find a measure of how much "choice" is involved in the
-selection of the event or how uncertain we are of the outcome?
+Suppose we have a set of possible events whose probabilities of occurrence are \(p_1, p_2, \dots, p_n\).
+These probabilities are known but that is all we know concerning which event will occur.
+Can we find a measure of how much "choice" is involved in the selection of the event or how uncertain we are of the outcome?
 \end{quote}
 If there is such a measure, say, \(H(p_1, p_2, \dots, p_n)\)\footnote{Where \(H\) refers to Hartley.}, it is reasonable to require
 of it the following properties:
 \begin{itemize}
   \item \(H\) should be continuous in the \(p_i\).
   \item If all the \(p_i\) are equal, \(p_i = \frac{1}{n}\) then \(H\) should be a monotonic increasing function of \(n\). With
-  equally likely events there is more choice, or uncertainty, when there are more possible events.
+        equally likely events there is more choice, or uncertainty, when there are more possible events.
   \item If a choice be broken down into two successive choices, the original \(H\) should be the weighted sum of the individual
-  values of \(H\) (The entropy of an entire stream is simply the sum of the entropy of all individual symbols).
+        values of \(H\) (The entropy of an entire stream is simply the sum of the entropy of all individual symbols).
 \end{itemize}
 
 Then Shannon proved that the only \(H\) satisfying the three assumptions above has the form:
@@ -256,21 +264,24 @@ Then Shannon proved that the only \(H\) satisfying the three assumptions above h
   H = -K \sum_{i = 1}^{n} p_i \ln p_i
 \end{equation}
 
-\autoref{eq:entropy1} includes a constant \(K\), in the Shannon article it is any constant. In application to thermodynamics \(K\)
-turns into Boltzmann Constant. It is simply a scaling factor. Note that if \(K\) is \(\frac{1}{\ln b}\) or equivalently
-\(\log_b e\), the formula, considering only \(K\) and the logarithm, becomes \(\log_b e \cdot \ln p\) that is the same of
-\(\log_b e^{\ln p}\) that can be simply written as \(\log_b p\). So:
+\autoref{eq:entropy1} includes a constant \(K\), in the Shannon article it is any constant.
+In application to thermodynamics \(K\) turns into Boltzmann Constant.
+It is simply a scaling factor.
+Note that if \(K\) is \(\frac{1}{\ln b}\) or equivalently \(\log_b e\), the formula, considering only \(K\) and the logarithm,
+becomes \(\log_b e \cdot \ln p\) that is the same of \(\log_b e^{\ln p}\) that can be simply written as \(\log_b p\).
+So:
 
 \begin{equation} \label{eq:entropy2}
   H(P) = - \sum_{i = 1}^{n} p_i \log_2 p_i
 \end{equation}
 
 Where \(P = {p_1, p_2, \dots, p_n}\) is the distribution of probability considered.
-remind that in \autoref{eq:entropy2} base \(2\) could be a general base \(b\) and it can be simply view as a simple change in the
+Remind that in \autoref{eq:entropy2} base \(2\) could be a general base \(b\) and it can be simply view as a simple change in the
 unit of measurement (as it was seen in \autoref{tab:information_units}).
 
-An intuitive way to explain the origin of this formula is now discussed. We want to obtain the average amount of information from
-each symbol we see in a stream. Let's suppose we start from \(n\) symbols \(a_1, a_1, \dots, a_n\).
+An intuitive way to explain the origin of this formula is now discussed.
+We want to obtain the average amount of information from each symbol we see in a stream.
+Let's suppose we start from \(n\) symbols \(a_1, a_1, \dots, a_n\).
 A stream of these symbols is provided with probabilities \(p_1, p_1, \dots, p_n\) respectively.
 As it was seen in \autoref{eq:information2} for a symbol \(a_i\) we get \(-\log_2 p_i\) information.
 In a long run, say \(N\) observations, we will see (approximately) \(N \cdot p_i\) occurrences of the symbol \(a_i\).
@@ -339,8 +350,9 @@ coin.
 
 \chapter{Randomness} \label{chap:randomness}
 
-Compression, logically, can be interpreted as the removal of redundancy. The compressed data therefore has no structure and cannot
-be distinguished from random data; in fact, it is random (\cite{AConciseIntroductionToDataCompression}).
+Compression, logically, can be interpreted as the removal of redundancy.
+The compressed data therefore has no structure and cannot be distinguished from random data; in fact, it is random
+(see \cite{AConciseIntroductionToDataCompression}).
 
 \section{Origins}
 
@@ -352,8 +364,8 @@ In 1964 and 1965, Martin-Löf\footnote{Per Erik Rutger Martin-Löf (born 1942) i
 statistician.} was a student in Moscow under the supervision of Kolmogorov.
 In 1966, he wrote "The definition of random sequences" that gave the first suitable definition of a random sequence.
 
-Martin-Löf extended the definition for random elements with three approaches (\cite{AlgorithmicRandomnessAndComplexity}) to the
-definition of algorithmic randomness for infinite sequences:
+Martin-Löf extended the definition for random elements with three approaches (from \cite{AlgorithmicRandomnessAndComplexity}) to
+the definition of algorithmic randomness for infinite sequences:
 
 \begin{definition}
 The \textbf{computational paradigm}: Random sequences are those whose initial segments are all hard  to describe, or,
@@ -373,14 +385,14 @@ namely that one should not be able to predict the next bit of a random sequence,
 way that a coin toss is unpredictable even given the results of previous coin tosses.
 \end{definition}
 
-Despite the definitions he real improvement of Martin-Löf was the introduction of tests for randomness
+Despite the definitions the real innovation by Martin-Löf was the introduction of tests for randomness
 (\cite{TheDefinitionOfRandomSequences}).
 
 \begin{example}
-Let's consider a long binary sequence "000...0" of all zeros.
-It can be said that this sequence does not converge to 1/2 in the probability of 1 and 0, so it is clearly non-random.
-But the reverse is not true: For instance "101101101101101...101" is not random because "101" occurs too often.
-Moreover not random sequences like the digits of \(\pi\), cause the most difficulties.
+Let's consider a long binary sequence \(000\dots0\) of all zeros.
+It can be said that this sequence does not converge to \(1/2\) in the probability of \(1\) and \(0\), so it is clearly non-random.
+But the reverse is not true: For instance \(101101101\dots101\) is not random because \(101\) occurs too often.
+Moreover sequences that are not random like the digits of \(\pi\), cause the most difficulties.
 In general, tests for randomness help us to understand if a sequence is random or not.
 \end{example}
 
@@ -388,7 +400,7 @@ In general, tests for randomness help us to understand if a sequence is random o
 
 Following these studies the algorithmic information theory\footnote{The field of algorithmic information theory (AIT) arises by
 mixing information theory and computation theory to obtain an objective and absolute notion of information in an individual
-object.} (\cite{AlgorithmicInformationTheoryBriefGuide}) formally defines what is randomness of individual objects
+object.} (see \cite{AlgorithmicInformationTheoryBriefGuide}) formally defines what is randomness of individual objects
 (binary strings).
 
 \begin{definition}
@@ -409,6 +421,8 @@ Furthermore it is known that the Kolmogorov complexity is not computable.
 
 \section{Random Sequences}
 
+Randomness is a complex concept and it is not given for free in our devices.
+The generation of random sequence is something that requires attention and must be handled with care.
 A random sequence should satisfy three conditions:
 
 \begin{itemize}
@@ -443,15 +457,15 @@ hand modeling and coding are two distinctly different things.
 \section{Techniques}
 
 The compression techniques can be: \textit{lossless} and \textit{lossy}.
-The first category is the most similar to the theory and the most practical intuition of it.
+The first category is the most intuitive from the theory in fact it preserves data as they are.
 Lossless compression ratios are generally in the range of 2:1 to 8:1.
 Lossy compression, in contrast, works on the assumption that the data doesn't have to be stored perfectly.
 Most information can be simply thrown away; the data will still be of acceptable quality.
 This technique is frequently used in image and video compression, where a group of pixels can be approximated into a single value.
 In this case the ratio can be of orders greater.
-In conclusion lossless compression has a lower ratio it preserves all information that can be reload back to the original data, on
-the other hand, lossy compression has a bigger ratio but it discards some information and doesn't generate the same data when it
-is reloaded.
+In conclusion lossless compression has a lower ratio because it preserves all information that can be reload back to the original
+data, on the other hand, lossy compression has a bigger ratio but it discards some information and doesn't generate the same data
+when it is reloaded.
 
 \subsection{Modeling}
 
@@ -465,18 +479,20 @@ both when encoding and when decoding, is avoided.
 \subsubsection{Statistical Modeling}
 
 It uses a static table of probabilities.
-At the beginning the model was created only one time and reused for different data.
+At the beginning the model was created only the first time and then it is reused many times for different data.
 The next enhancement was to build a statistics table for every unique input stream.
 The number of symbols (usually characters) is called order of the model.
 In particular order-N indicates that are considered N characters before the current one.
-The order is important because it determines the size of the table. The higher the order, the larger the table.
-However, as the order increases, the algorithm's efficiency ratio also improves (up to the point where the overhead of
-reading these tables becomes significant).
+The order is important because it determines the size of the table.
+The higher the order, the larger the table.
+However, as the order increases, the algorithm's efficiency ratio also improves, up to the point where the overhead of
+reading these tables becomes significant.
 An alternative approach is to use adaptive models, that generates statistics while reading data.
 
 \subsubsection{Dictionary Modeling}
 
-It follows a different approach. It reads in input data and looks for groups of symbols that appear in a dictionary.
+It follows a different approach.
+It reads in input data and looks for groups of symbols that appear in a dictionary.
 It uses pointers to refer to groups of symbols at some point in the dictionary.
 The longer the match, the better the compression ratio.
 In this case the modeling is the core of the compression algorithm.
@@ -486,9 +502,10 @@ Also in this case the dictionary can be static or adaptive.
 
 It generate codes to represent symbols or groups of symbols.
 
-\subsection{Implementations}
+\subsection{Lossless Compression Techniques}
 
-For details on these implementations and their examples, see \cite{TheDataCompressionBook2ndEdition} and
+Lossless compression techniques are used to compress archives and files that need to be preserved as they are.
+For details on the following implementations and their examples, see \cite{TheDataCompressionBook2ndEdition} and
 \cite{IntroductionToDataCompression}.
 
 \subsubsection{Morse Code (1837)}
@@ -497,7 +514,7 @@ It was based on the fact that shorter code should be assigned to the most freque
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.8\textwidth]{morse-code-characters-infographic}
+  \includegraphics[width=0.7\textwidth]{morse-code-characters-infographic}
   \caption{Table of the various Morse code characters}
   \label{fig:morse_code_pdf}
 \end{figure}
@@ -830,7 +847,8 @@ coding requires only 87.
 Run-length encoding algorithm stores consecutive occurrences of the same data value as a single occurrence of that data value and
 a counter of the number of consecutive occurrences.
 In some certain circumstances it can be very useful and efficient specially if combined with other techniques.
-In 1983 RLE was patented by \href{https://en.wikipedia.org/wiki/Hitachi}{Hitachi}.
+In 1983 RLE was patented by Hitachi\footnote{Hitachi, Ltd. is a Japanese multinational conglomerate founded in 1910 and
+headquartered in Chiyoda, Tokyo.}.
 
 \subsubsection{Arithmetic coding (1976)}
 
@@ -1139,6 +1157,76 @@ improved performance compared to previous methods.
 ANS combines the compression ratio of arithmetic coding with a processing cost similar to that of Huffman coding.
 It's tabled variant, tANS, is achieved by constructing a finite-state machine.
 
+\subsection{Lossy Compression Techniques}
+
+Lossy compression techniques are used for multimedia data (audio, images and video) especially in applications such as streaming
+media and internet telephony.
+However, when quality does start degrading in a noticeable way, it is important to make sure it degrades in a way that is least
+objectionable to the viewer.
+The following descriptions are taken from \cite{IntroductionToDataCompression} and \cite{TheDataCompressionBook2ndEdition}.
+
+\subsubsection{Transform Coding}
+
+The idea of transform coding is to transform the input into a different form which can then either be compressed better.
+This means that these are lossless transformations that doesn't actually perform compression.
+The discrete cosine transform (DCT) is one of the most commonly used, another example is the discrete Fourier transform (DFT).
+
+\subsubsection{Scalar Quantization}
+
+A way to implement lossy compression is to take the set of possible messages \(S\) and reduce it to a smaller set \(S'\) by
+mapping each element of \(S\) to an element in \(S'\).
+Since the mapping used in quantization is many-to-one, it is irreversible and therefore lossy.
+This general technique is called quantization.
+When the mapping is linear it can be talked about \textit{uniform scalar quantization}.
+When it is nonlinear it can be talked about \textit{nonuniform scalar quantization}.
+In practice nonuniform scalar quantization is usually better.
+
+\subsubsection{Vector Quantization}
+
+Vector quantization maps a multidimensional space into a smaller set of messages \(S'\).
+Vector quantization is typically implemented by selecting a set of representatives from the input space, and then mapping all
+other points in the space to the closest representative.
+Typically representatives are found using a clustering algorithm that finds some number of clusters of points in the data.
+A representative is then chosen for each cluster by either selecting one of the points in the cluster or using some different
+strategy that starts from these points and calculates the representative.
+Vector quantization is most effective when the variables along the dimensions of the space are correlated.
+
+\subsubsection{Wavelet Compression}
+
+The fact that cosine and Fourier transforms are periodic functions can create problems when the input contains strong aperiodic
+features.
+A solution could be to break up the input in fixed-size blocks and transform each block in isolation.
+An alternative approach is to use basis functions, called "wavelets", that could be applied to the entire image, without requiring
+blocking.
+
+To derive a suitable set of basis functions it starts from a single function, the "mother function".
+Whereas cosine and Fourier repeats indefinitely, we want the wavelet mother function, to be contained within some local region,
+and approach zero as we stray further away.
+The family of basis functions are scaled and translated versions of this mother function.
+
+\subsubsection{Fractal Compression}
+
+The term "fractal" was first used by Mandelbrot\footnote{Benoit B. Mandelbrot (1924-2010) was a Polish-born French-American
+mathematician and polymath with broad interests in the practical sciences. He is recognized for his contribution to the field of
+fractal geometry} to designate objects that are self-similar at different scales.
+A well-known example is the Mandelbrot set, that is a complex image that can be computed by a simple program with a very short
+formula.
+The idea behind fractal compression is that if we wish to transmit a value, we could instead transmit a function or some functions
+that iteratively converges on that value.
+The functions are mappings from images to images.
+It is enough that encoder and decoder have agreed in advance about the functions to use.
+The function family we choose is a set of "collage functions", which map regions of an image to similar regions elsewhere in the
+image, modified by scaling, rotation, translation, and other simple transforms.
+
+\subsubsection{Model-Based Compression}
+
+The idea here is to characterize the source data in terms of some strong underlying model.
+Both sender and receiver share a large body of a priori knowledge contained in the model itself (e.g., the fact that faces have
+two eyes and one nose).
+Other information are transmitted with any given data set.
+Model-based encoding has found applicability in such areas as computerized recognition of four-legged animals or facial
+expressions.
+
 \section{Comparison of Algorithms}
 
 They are useful when done on algorithms of the same compression technique: lossless or lossy.
@@ -1176,18 +1264,22 @@ As the compression speed, it is important is specific use cases, usually when th
 \subsection{CPU Usage}
 
 The use can differ from \(100 \%\) (a single core) to \(N \times 100 \%\) (\(N\) cores), where \(N\) is the number of logical
-cores of the CPU.
+cores of the CPU\footnote{A central processing unit (CPU), also called a central processor, main processor, or just processor, is
+the most important processor in a given computer. It executes instructions of a computer program.}.
 It has to be considered than even if a multi-threaded algorithm is generally faster than it's equivalent single-threaded
 algorithm, the higher CPU usage is something that could be considered in the comparison of algorithms, depending on the needs.
 In practical tests the percentage could be different from a multiple of \(100 \%\), for example an average.
 
 In most cases every algorithm is implemented to work on the CPU only, because GPUs are expensive and the hardware is needed.
-If it could work on the GPU it should be specified and tests should consider that.
+If it could work on the GPU\footnote{A graphics processing unit (GPU) is a specialized electronic circuit initially designed for
+digital image processing and to accelerate computer graphics. After their initial design, GPUs were found to be useful for
+non-graphic calculations computing parallel programs very efficiently.} it should be specified and tests should consider that.
 In fact their results should not be compared with other algorithms implementations that work on the CPU.
 
 \subsection{Memory Usage}
 
-How much RAM the implementation of the algorithm needs.
+How much RAM\footnote{Random-access memory (RAM) is a form of electronic computer memory that can be read and changed in any
+order, typically used to store working data and machine code.} the implementation of the algorithm needs.
 
 \subsection{Time}
 
@@ -1210,17 +1302,17 @@ hardware or operating system resources.
 \label{subsubsec:wall_time}
 
 The actual elapsed real-world time taken for the program to run from start to finish.
-It is the sum of the \hyperref[subsubsec:user_time]{\texttt{user time}} and the
-\hyperref[subsubsec:system_time]{\texttt{system time}}.
+It is the sum of the \hyperref[subsubsec:user_time]{\textit{user time}} and the
+\hyperref[subsubsec:system_time]{\textit{system time}}.
 
 \subsection{Randomness Tests}
 
 For what said in \autoref{chap:randomness}, an interesting way to understand the efficiency of compression algorithms is to
 analyze the randomness of the output string of the compression algorithm.
 
-This factor is not so indicative like the others but some tests has been yet done.
-In \cite{OnTheRandomnessOfCompressedData} it is stated that surprisingly, the best compression schemes do not have the most random
-output.
+This factor is not so indicative like the others but some articles talk about this.
+In \cite{OnTheRandomnessOfCompressedData} it is stated that surprisingly it can occur that the best compression schemes do not
+have the most random output.
 This suggests that these schemes can be further improved.
 
 \chapter{Compression Tools}
@@ -1344,20 +1436,36 @@ It is multi-threaded by default.
 
 \chapter{Conclusions}
 
-Ultimately, the selection of a compression method depends on the specific requirements of the task at hand.
+The distinction between data and information serves as the foundation for understanding data compression.
 
-For tasks prioritizing speed, tools with a lower compression ratio like \hyperref[subsec:compress]{\texttt{compress}} and
-\hyperref[subsec:lz4]{\texttt{lz4}} are excellent choices.
-Small files might be more efficiently handled by fast compressing tools like \hyperref[subsec:gzip]{\texttt{gzip}} (or better
-\texttt{pigz}).
-Large files benefit from high compression ratio tools like \hyperref[subsec:bzip2]{\texttt{bzip2}} (or better \texttt{pbzip2})
-and \hyperref[subsec:bzip3]{\texttt{bzip3}}.
+A brief introduction to information theory highlighted the origins of this discipline and its key principles.
 
-The file type also matters, with textual data typically compressing well with the tools previously seen.
+The report demonstrated how information can be quantified and showed that "uncertainty" is measured as entropy.
+
+Additionally, the concept of randomness and its relationship to data compression and algorithmic information theory was explored.
+Generating truly random sequences in digital computers was shown to be a challenging task.
+
+An overview of the most prominent lossless and lossy compression algorithms, along with the metrics used to evaluate them,
+provided a basis for analyzing and comparing different compression tools.
+A detailed comparison of lossless compression tools offered insight into the options currently available in the market.
+
+The choice of a compression method ultimately depends on the specific requirements of the task at hand.
+
+For tasks where speed is a priority, tools with a lower compression ratio, such as \hyperref[subsec:compress]{\texttt{compress}}
+and \hyperref[subsec:lz4]{\texttt{lz4}}, are ideal.
+For small files, fast compression tools like \hyperref[subsec:gzip]{\texttt{gzip}} or its improved variant
+\hyperref[subsec:gzip]{\texttt{pigz}} are effective.
+Large files benefit from high compression ratio tools such as \hyperref[subsec:bzip2]{\texttt{bzip2}} or its improved variant
+\hyperref[subsec:bzip2]{\texttt{pbzip2}} and \hyperref[subsec:bzip3]{\texttt{bzip3}}.
+
+The file type also plays a crucial role, textual data typically compresses well with the tools discussed earlier.
 On the other hand binary files might see better results with \hyperref[subsec:zstd]{\texttt{zstd}} which has a high compression
-ratio and it is very fast.
-Furthermore \hyperref[subsec:lzma]{\texttt{lzma}} and \hyperref[subsec:xz]{\texttt{xz}} have impressive compression levels
-but require a lot of time.
+ratio and impressive fast.
+Lastly, tools like \hyperref[subsec:lzma]{\texttt{lzma}} and \hyperref[subsec:xz]{\texttt{xz}} deliver remarkable compression
+levels but require significantly more time to process.
+
+The final decision should balance the trade-offs between the compared parameters (compression speed, ratio...), and the specific
+characteristics of the data being compressed.
 
 \printbibliography
 \thispagestyle{empty}
