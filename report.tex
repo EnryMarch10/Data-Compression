@@ -113,8 +113,8 @@ The goal of data compression is to reduce data redundancy by maintaining the sam
 
 The counterpart is that in our time data is inherently redundant, enabling applications to handle various formats.
 So data compression isn't only a procedure that goes from a bit-stream to another one not longer.
-In fact, it is a more complex system that requires also another procedure that takes the previously given output bit-stream of
-information and regenerates the original bit-stream of data.
+In fact, it is a more complex system that requires an additional step.
+This step takes the previously obtained information bit-stream as input and regenerates the original data bit-stream from it.
 
 This makes clear that the task of compression is a two-step process: an \textit{encoding} algorithm that takes a message
 and generates a "compressed" representation (hopefully with fewer bits), and a \textit{decoding} algorithm that reconstructs
@@ -220,7 +220,7 @@ information theory.} in 1928 trying to measure uncertainty, without talking abou
       hartley (or dit) & \(10\) & \\
       \hline
   \end{tblr}
-  \caption{\label{tab:information_units} Information units of measurement}
+  \caption{\label{tab:information_units} Information units of measurement.}
 \end{table}
 
 \begin{example}
@@ -390,8 +390,8 @@ Despite the definitions the real innovation by Martin-Löf was the introduction 
 
 \begin{example}
 Let's consider a long binary sequence \(000\dots0\) of all zeros.
-It can be said that this sequence does not converge to \(1/2\) in the probability of \(1\) and \(0\), so it is clearly non-random.
-But the reverse is not true: For instance \(101101101\dots101\) is not random because \(101\) occurs too often.
+It can be said that this sequence does not converge to \(1/2\) in the probability of 1 and 0, so it is clearly non-random.
+But the reverse is not true: For instance \(101101101\dots101\) is not random because 101 occurs too often.
 Moreover sequences that are not random like the digits of \(\pi\), cause the most difficulties.
 In general, tests for randomness help us to understand if a sequence is random or not.
 \end{example}
@@ -451,13 +451,13 @@ about the structure of the input.
 The coder component then takes advantage of the probability knowledge acquired in the model to generate codes to represent the
 symbols (or messages).
 It does this by effectively lengthening low probability messages and shortening high-probability messages.
-It should be pointed out that the line between model and coder components of algorithms is not always well define, on the other
-hand modeling and coding are two distinctly different things.
+It should be pointed out that the line between model and coder components of algorithms is not always well defined, nevertheless
+it is important to consider that modeling and coding are two distinctly different things.
 
 \section{Techniques}
 
-The compression techniques can be: \textit{lossless} and \textit{lossy}.
-The first category is the most intuitive from the theory in fact it preserves data as they are.
+The compression techniques can be \textit{lossless} or \textit{lossy}.
+The first category is the most theoretical, in fact it preserves data as they are.
 Lossless compression ratios are generally in the range of 2:1 to 8:1.
 Lossy compression, in contrast, works on the assumption that the data doesn't have to be stored perfectly.
 Most information can be simply thrown away; the data will still be of acceptable quality.
@@ -904,9 +904,9 @@ The message "BILL GATES", for example, would have the following probability dist
 
 \autoref{tab:ex_arithmetic_input} shows input data, how the are sorted and their range of probability.
 
-The Arithmetic coding encoding algorithm is:
+The Arithmetic encoding algorithm is:
 
-\begin{lstlisting}[language=CStyle, caption={Arithmetic coding encoding algorithm}, label={lst:ex_arithmetic_encoding}]
+\begin{lstlisting}[language=CStyle, caption={Arithmetic encoding algorithm.}, label={lst:ex_arithmetic_encoding}]
   low = 0.0;
   high = 1.0;
   while ((c = getc(input)) != EOF) {
@@ -959,7 +959,7 @@ So the final value 0.2572167752 (as shown in \autoref{tab:ex_arithmetic_encoding
 
 The Arithmetic coding decoding algorithm is:
 
-\begin{lstlisting}[language=CStyle, caption={Arithmetic coding encoding algorithm}, label={lst:ex_arithmetic_decoding}]
+\begin{lstlisting}[language=CStyle, caption={Arithmetic decoding algorithm.}, label={lst:ex_arithmetic_decoding}]
   number = input_code();
   for (;;) {
     symbol = find_symbol_straddling_this_range(number);
@@ -1208,7 +1208,7 @@ The family of basis functions are scaled and translated versions of this mother 
 
 The term "fractal" was first used by Mandelbrot\footnote{Benoit B. Mandelbrot (1924-2010) was a Polish-born French-American
 mathematician and polymath with broad interests in the practical sciences. He is recognized for his contribution to the field of
-fractal geometry} to designate objects that are self-similar at different scales.
+fractal geometry.} to designate objects that are self-similar at different scales.
 A well-known example is the Mandelbrot set, that is a complex image that can be computed by a simple program with a very short
 formula.
 The idea behind fractal compression is that if we wish to transmit a value, we could instead transmit a function or some functions
@@ -1229,7 +1229,6 @@ expressions.
 
 \section{Comparison of Algorithms}
 
-They are useful when done on algorithms of the same compression technique: lossless or lossy.
 The following factors refer mainly to lossless data compression, in the lossy case it is more complicated (for example it should
 be considered how good is the approximation).
 Measurements have to be considered as averages in practice, because they are different for every single sample so their value is
@@ -1241,7 +1240,7 @@ An important factor when considering data compression is the "compression ratio"
 (look at \autoref{eq:factor_compression_ratio}).
 
 \begin{equation} \label{eq:factor_compression_ratio}
-  compression ratio = \frac{uncompressed file size}{compressed file size}
+  compression\ ratio = \frac{decompressed\ file\ size\ (SIZE)}{compressed\ file\ size\ (SIZE)}
 \end{equation}
 
 \subsection{Compression Speed}
@@ -1249,7 +1248,7 @@ An important factor when considering data compression is the "compression ratio"
 It is important is specific use cases, usually when the network is involved (look at \autoref{eq:factor_decompression_speed}).
 
 \begin{equation} \label{eq:factor_compression_speed}
-  compression speed (SIZE / s) = \frac{uncompressed file size (SIZE)}{compression time (s)}
+  compression\ speed\ (SIZE / s) = \frac{decompressed\ file\ size\ (SIZE)}{compression\ time\ (s)}
 \end{equation}
 
 \subsection{Decompression Speed}
@@ -1258,7 +1257,7 @@ As the compression speed, it is important is specific use cases, usually when th
 \autoref{eq:factor_decompression_speed}).
 
 \begin{equation} \label{eq:factor_decompression_speed}
-  decompression speed (SIZE / s) = \frac{uncompressed file size (SIZE)}{uncompression time (s)}
+  decompression\ speed\ (SIZE / s) = \frac{decompressed\ file\ size\ (SIZE)}{decompression\ time\ (s)}
 \end{equation}
 
 \subsection{CPU Usage}
@@ -1268,18 +1267,22 @@ cores of the CPU\footnote{A central processing unit (CPU), also called a central
 the most important processor in a given computer. It executes instructions of a computer program.}.
 It has to be considered than even if a multi-threaded algorithm is generally faster than it's equivalent single-threaded
 algorithm, the higher CPU usage is something that could be considered in the comparison of algorithms, depending on the needs.
-In practical tests the percentage could be different from a multiple of \(100 \%\), for example an average.
+In practical tests the percentage could be different from a multiple of \(100 \%\), for example an average of the total execution
+could be considered.
 
-In most cases every algorithm is implemented to work on the CPU only, because GPUs are expensive and the hardware is needed.
+In most cases every algorithm is implemented to work on the CPU only, because GPUs are expensive, besides their hardware is
+needed.
 If it could work on the GPU\footnote{A graphics processing unit (GPU) is a specialized electronic circuit initially designed for
 digital image processing and to accelerate computer graphics. After their initial design, GPUs were found to be useful for
 non-graphic calculations computing parallel programs very efficiently.} it should be specified and tests should consider that.
-In fact their results should not be compared with other algorithms implementations that work on the CPU.
+In fact their results should not be compared with other algorithms implementations that work on the CPU, because they would be,
+in most cases, inevitably slower.
 
 \subsection{Memory Usage}
 
 How much RAM\footnote{Random-access memory (RAM) is a form of electronic computer memory that can be read and changed in any
 order, typically used to store working data and machine code.} the implementation of the algorithm needs.
+In many cases an average is enough.
 
 \subsection{Time}
 
@@ -1429,7 +1432,7 @@ Zstandard is a lossless data compression algorithm developed by Yann Collet at F
 Zstandard uses a dictionary windows (like LZ77) combined with fast entropy-coding.
 It uses Huffman coding and finite-state entropy (FSE) (a version of ANS, tANS).
 Zstd is the corresponding reference implementation in C, released as open-source software\footnote{the official implementation is
-available at \url{https://github.com/facebook/zstd}} in 2016.
+available at \url{https://github.com/facebook/zstd}.} in 2016.
 It is multi-threaded by default.
 
 \appendix
@@ -1453,10 +1456,10 @@ The choice of a compression method ultimately depends on the specific requiremen
 
 For tasks where speed is a priority, tools with a lower compression ratio, such as \hyperref[subsec:compress]{\texttt{compress}}
 and \hyperref[subsec:lz4]{\texttt{lz4}}, are ideal.
-For small files, fast compression tools like \hyperref[subsec:gzip]{\texttt{gzip}} or its improved variant
-\hyperref[subsec:gzip]{\texttt{pigz}} are effective.
-Large files benefit from high compression ratio tools such as \hyperref[subsec:bzip2]{\texttt{bzip2}} or its improved variant
-\hyperref[subsec:bzip2]{\texttt{pbzip2}} and \hyperref[subsec:bzip3]{\texttt{bzip3}}.
+For small files, fast compression tools like \hyperref[subsec:gzip]{\texttt{gzip}}, or its improved variant
+\hyperref[subsec:gzip]{\texttt{pigz}}, are effective.
+Large files benefit from high compression ratio tools such as \hyperref[subsec:bzip2]{\texttt{bzip2}}, or its improved variant
+\hyperref[subsec:bzip2]{\texttt{pbzip2}}, and \hyperref[subsec:bzip3]{\texttt{bzip3}}.
 
 The file type also plays a crucial role, textual data typically compresses well with the tools discussed earlier.
 On the other hand binary files might see better results with \hyperref[subsec:zstd]{\texttt{zstd}} which has a high compression
